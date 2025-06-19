@@ -9,6 +9,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Card from "./Card";
 
 import MoreInfo from "./MoreInfo";
+import Contact from "./Contact";
 
 const Projects = () => {
   const ref = useRef(null);
@@ -226,10 +227,9 @@ const Projects = () => {
 
         {/* Dark overlay transition - CONDITIONAL RENDERING ADDED */}
         {showMoreInfo && (
-          <div
-            className="fixed inset-0  flex items-center justify-center bg-black h-screen  "
-            >
+          <div >
             <MoreInfo />
+            
           </div>
         )}
       </div>

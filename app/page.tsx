@@ -4,7 +4,7 @@ import Header from "@/components/header";
 import Image from "next/image";
 import { motion, useAnimation, useInView } from "framer-motion";
 import { useEffect, useRef } from "react";
-import Sidebar from "@/components/Sidebar";
+
 import SmoothFollower from "@/components/SmoothFollower";
 import Projects from "@/components/Projects";
 
@@ -27,7 +27,7 @@ export default function HomePage() {
       <div ref={ref} className="min-h-screen flex bg  ">
         {/* Left Section: Header + Content */}
         <div className="w-[60%] max-md:w-[100%] bg-white flex flex-col px-10 py-6 relative">
-          <Sidebar />
+       
           {/* Top: Header */}
 
           <Header />
