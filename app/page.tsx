@@ -43,11 +43,10 @@ export default function HomePage() {
               />
             </div>
             {/* Main Content */}
-
             <div className="flex-grow flex flex-col justify-between">
               {/* Large Title Text */}
               <div className=" mt-5 lg:mt-20 relative">
-                <div className="font-mono">
+                <div className="">
                   {/* First line - "Hey, I'm Josiah" */}
                   <div className="relative mb-2 overflow-hidden w-32 md:w-40 ">
                     <motion.div
@@ -96,7 +95,7 @@ export default function HomePage() {
                       initial="hidden"
                       animate={mainControls}
                       transition={{ duration: 0.5, delay: 0.35 }}>
-                      <h1 className="text-6xl md:text-5xl lg:text-6xl font-bold leading-tight text-[#00FF9B]">
+                      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-[#00FF9B]">
                         Full Stack
                       </h1>
                     </motion.div>
@@ -134,7 +133,7 @@ export default function HomePage() {
                       initial="hidden"
                       animate={mainControls}
                       transition={{ duration: 0.5, delay: 0.45 }}>
-                      <h1 className="text-5xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-800">
+                      <h1 className="text-5xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-800">
                         Web Developer
                         <span className="animate-pulse text-gray-800">_</span>
                       </h1>
@@ -164,7 +163,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Fourth line - Description */}
-                  <div className="relative mt-6 overflow-hidden w-64 md:w-96 lg:w-[32rem] xl:w-[40rem]">
+                  <div className="relative mt-6 overflow-hidden w-64 md:w-96 lg:w-[34rem] ">
                     <motion.div
                       variants={{
                         hidden: { opacity: 0, y: 20 },
@@ -173,7 +172,7 @@ export default function HomePage() {
                       initial="hidden"
                       animate={mainControls}
                       transition={{ duration: 0.5, delay: 0.55 }}>
-                      <p className="text-base sm:text-lg md:text-base leading-relaxed text-gray-600">
+                      <p className="text-base sm:text-lg md:text-md leading-relaxed text-gray-600">
                         I specialize in Node.js, React, Next.js, and TypeScript,
                         and I enjoy solving tricky problems with creative
                         solutions. I’m passionate about turning ideas into
@@ -207,10 +206,7 @@ export default function HomePage() {
               </div>
 
               {/* Bottom content */}
-
               <div className="mb-12">
-                {/* Large name at bottom right */}
-
                 {/* Down arrow indicator */}
                 <div className="absolute bottom-0 lg:bottom-10 left-10">
                   <div className="w-12 h-12 text-gray-800 animate-bounce">

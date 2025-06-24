@@ -309,7 +309,7 @@ const Projects = () => {
 
           {/* MoreInfo only shows on desktop */}
           {!isSmallScreen && showMoreInfo && (
-            <div>
+            <div >
               <MoreInfo />
             </div>
           )}

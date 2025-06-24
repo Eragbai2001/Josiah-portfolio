@@ -536,12 +536,16 @@ const Contact = () => {
         {/* Right side - Phone SVG and Form */}
         <div className="flex flex-col items-center justify-center relative h-full">
           {/* Phone SVG */}
+
           <motion.div
-            key={`phone-${animationKey}`} // Force re-render
+            key={`phone-${animationKey}`}
             className="phoneSvg absolute flex items-center justify-center z-10"
-            initial={{ opacity: 1 }}
-            animate={{ opacity: isInView ? 0 : 1 }}
-            transition={{ delay: isInView ? 3 : 0, duration: 1 }}
+            initial={{ opacity: 1, zIndex: 10 }}
+            animate={{
+              opacity: showForm ? 0 : 1, // ✅ Use showForm instead of isInView
+              zIndex: showForm ? -1 : 10, // ✅ Use showForm instead of isInView
+            }}
+            transition={{ delay: 3, duration: 1 }} // ✅ Fixed delay - always 3 seconds
             onAnimationComplete={(definition) => {
               if (
                 typeof definition === "object" &&
@@ -552,6 +556,7 @@ const Contact = () => {
                 setShowForm(true);
               }
             }}>
+            {/* SVG content stays the same */}
             <svg
               width="450px"
               height="450px"
@@ -563,12 +568,12 @@ const Contact = () => {
                 d="M13.5 2C13.5 2 15.8335 2.21213 18.8033 5.18198C21.7731 8.15183 21.9853 10.4853 21.9853 10.4853"
                 stroke="#00FF9B"
                 strokeWidth="0.2"
-                strokeLinecap="butt" // Change from "round" to "butt"
+                strokeLinecap="butt"
                 fill="none"
-                initial={{ pathLength: 0, opacity: 0 }} // Add opacity to hide initially
+                initial={{ pathLength: 0, opacity: 0 }}
                 animate={{
-                  pathLength: isInView ? 1 : 0,
-                  opacity: isInView ? 1 : 0, // Fade in with animation
+                  pathLength: 1, // ✅ Always animate to full path
+                  opacity: 1, // ✅ Always animate to full opacity
                 }}
                 transition={{ duration: 2, delay: 0.5 }}
               />
@@ -577,12 +582,12 @@ const Contact = () => {
                 d="M14.207 5.53564C14.207 5.53564 15.197 5.81849 16.6819 7.30341C18.1668 8.78834 18.4497 9.77829 18.4497 9.77829"
                 stroke="#00FF9B"
                 strokeWidth="0.2"
-                strokeLinecap="butt" // Change from "round" to "butt"
+                strokeLinecap="butt"
                 fill="none"
                 initial={{ pathLength: 0, opacity: 0 }}
                 animate={{
-                  pathLength: isInView ? 1 : 0,
-                  opacity: isInView ? 1 : 0,
+                  pathLength: 1, // ✅ Always animate to full path
+                  opacity: 1, // ✅ Always animate to full opacity
                 }}
                 transition={{ duration: 2, delay: 1 }}
               />
