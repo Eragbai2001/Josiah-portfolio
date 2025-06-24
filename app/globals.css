@@ -82,21 +82,35 @@
     background: transparent !important;
   }
 
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    /* Internet Explorer 10+ */
-    scrollbar-width: none;
-    /* Firefox */
-  }
-
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-    /* Safari and Chrome */
-  }
 
 
   .phoneSvg {
     stroke: #00FF9B;
+  }
+
+
+
+  /* Add to your globals.css */
+  .scroll-snap-container {
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    height: 100vh;
+  }
+
+  .snap-section {
+    scroll-snap-align: start;
+    min-height: 100vh;
+  }
+
+  /* Disable scroll snap on mobile */
+  @media (max-width: 768px) {
+    .scroll-snap-container {
+      scroll-snap-type: none !important;
+    }
+
+    .snap-section {
+      scroll-snap-align: none !important;
+    }
   }
 
   :root {

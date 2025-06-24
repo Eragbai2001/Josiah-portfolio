@@ -14,6 +14,8 @@ export default function MoreInfo() {
   const containerRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
   const [isContactVisible, setIsContactVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
   const { scrollYProgress } = useScroll({
     container: containerRef,
     offset: ["end end", "start start"],
@@ -25,12 +27,23 @@ export default function MoreInfo() {
     restDelta: 0.001,
   });
 
+  // Check if mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640); // Same breakpoint as isSmallScreen
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsContactVisible(entry.isIntersecting);
       },
-      { threshold: 0.5 } // Trigger when 50% of contact section is visible
+      { threshold: 0.5 }
     );
 
     if (contactRef.current) {
@@ -40,28 +53,78 @@ export default function MoreInfo() {
     return () => observer.disconnect();
   }, []);
 
-  // Apply scroll snap only when this component is mounted
+  // Apply scroll snap only when this component is mounted and not on mobile
   useEffect(() => {
-    const originalScrollSnapType =
-      document.documentElement.style.scrollSnapType;
-
-    if (containerRef.current) {
-      containerRef.current.style.scrollSnapType = "y mandatory";
-    }
-
-    return () => {
-      document.documentElement.style.scrollSnapType = originalScrollSnapType;
-      if (containerRef.current) {
-        containerRef.current.style.scrollSnapType = "";
+    const handleResize = () => {
+      if (containerRef.current && !isMobile) {
+        if (window.innerWidth <= 1024) {
+          containerRef.current.style.scrollSnapType = "none";
+        } else {
+          containerRef.current.style.scrollSnapType = "y mandatory";
+        }
       }
     };
-  }, []);
 
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [isMobile]);
+
+  // If mobile, render as a normal scrollable section
+  if (isMobile) {
+    return (
+      <div className="bg-black min-h-screen">
+        {/* Featured Works Header */}
+        <div className="py-16 text-center">
+          <h1 className="text-4xl font-bold text-[#00FF9B]">Featured Works</h1>
+        </div>
+
+        {/* Project slides - stacked vertically on mobile */}
+        <div className="space-y-16 px-4">
+          {projects.map((project) => (
+            <div key={project.id} className="space-y-6">
+              <div className="w-full max-w-sm mx-auto">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-64 object-cover rounded-xl shadow-lg border border-gray-700"
+                />
+              </div>
+
+              <div className="text-center space-y-4 max-w-md mx-auto">
+                <h2 className="text-2xl font-bold text-white">
+                  {project.title}
+                </h2>
+
+                <p className="text-gray-400 text-sm leading-relaxed">
+                  {project.description}
+                </p>
+
+                <button className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
+                  See Demo
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Contact Section */}
+        <div className="mt-16">
+          <Contact />
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop version (original code)
   return (
     <div>
       <div
         ref={containerRef}
-        className="fixed inset-0 overflow-y-auto bg-gray-900 z-50"
+        className="fixed inset-0 overflow-y-auto bg-gray-900 z-50 hide-scrollbar"
         style={{
           height: "100vh",
         }}>
@@ -73,12 +136,12 @@ export default function MoreInfo() {
             y: isContactVisible ? -50 : 0,
           }}
           transition={{ duration: 0.3 }}>
-          <h1 className="main-title">Featured Works</h1>
+          <h1 className="main-title max-lg:hidden">Featured Works</h1>
         </motion.div>
 
         {/* Progress bar - Hide when contact is visible */}
         <motion.div
-          className="progress mx-10"
+          className="progress mx-10 max-lg:hidden"
           style={{ scaleX }}
           animate={{
             opacity: isContactVisible ? 0 : 1,
@@ -143,7 +206,7 @@ function ProjectSlide({
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="project-description">
+            className="project-description text-gray-500">
             {description}
           </motion.p>
 
@@ -179,6 +242,16 @@ function StyleSheet() {
             inset: 0 0 auto 0; /* top right bottom left */
 
         }
+
+           .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      
 
         .main-title {
             font-size: 4rem;
@@ -252,7 +325,7 @@ function StyleSheet() {
         .project-description {
             font-size: 1.1rem;
             line-height: 1.7;
-            color: rgba(255, 255, 255, 0.7);
+           
             margin-bottom: 2.5rem;
            
         }
@@ -422,16 +495,16 @@ const Contact = () => {
 
   return (
     <div
-      className="text-white flex items-center justify-center py-16 px-4 contact-slide min-h-screen"
+      className="text-white flex items-center justify-center py-16 px-4 contact-slide h-screen bg-black max-md:mt-30"
       ref={ref}>
-      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-16">
+      <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-16 overflow-hidden max-md:w-4xl">
         {/* Left side - Contact Info */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: false }} // Allow re-animation
-          className="space-y-12">
+          className="space-y-12 max-lg:item-center lg:flex lg:flex-col ">
           <div>
             <h1 className="text-6xl lg:text-7xl font-bold leading-tight mb-4">
               Let's work
@@ -449,14 +522,13 @@ const Contact = () => {
             <div>
               <h3 className="text-xl font-semibold mb-2">Address</h3>
               <p className="text-gray-300">
-                #3 Graham Douglass Estate, Army Range, Igwuruta, Port Harcourt,
-                Nigeria
+                #3 Graham Blessing Estate, Army Range, Okoja, Lagos, Nigeria
               </p>
             </div>
 
             <div>
               <h3 className="text-xl font-semibold mb-2">Phone</h3>
-              <p className="text-gray-300">+2347042135690</p>
+              <p className="text-gray-300">+2347042135699</p>
             </div>
           </div>
         </motion.div>
