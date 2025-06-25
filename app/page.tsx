@@ -163,7 +163,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Fourth line - Description */}
-                  <div className="relative mt-6 overflow-hidden w-64 md:w-96 lg:w-[34rem] ">
+                  <div className="relative mt-6 overflow-hidden w-64 md:w-96 lg:w-[38rem] ">
                     <motion.div
                       variants={{
                         hidden: { opacity: 0, y: 20 },
@@ -172,7 +172,7 @@ export default function HomePage() {
                       initial="hidden"
                       animate={mainControls}
                       transition={{ duration: 0.5, delay: 0.55 }}>
-                      <p className="text-base sm:text-lg md:text-md leading-relaxed text-gray-600">
+                      <p className="text-base sm:text-lg  leading-relaxed text-gray-600">
                         I specialize in Node.js, React, Next.js, and TypeScript,
                         and I enjoy solving tricky problems with creative
                         solutions. I’m passionate about turning ideas into

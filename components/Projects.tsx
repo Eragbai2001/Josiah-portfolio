@@ -19,6 +19,7 @@ const Projects = () => {
   const slideControls = useAnimation();
   const [showMoreInfo, setShowMoreInfo] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [screenSize, setScreenSize] = useState("lg");
 
   const isInView = useInView(ref, { amount: 0.3 });
 
@@ -32,7 +33,44 @@ const Projects = () => {
   const gapWidth = 32;
   const totalWidth = totalCards * cardWidth + (totalCards - 1) * gapWidth;
 
-  const x = useTransform(scrollYProgress, [0.3, 0.65], ["0%", "-69.7%"]);
+  useEffect(() => {
+    const updateScreenSize = () => {
+      if (window.innerWidth < 640) setScreenSize("sm");
+      else if (window.innerWidth < 768) setScreenSize("md");
+      else if (window.innerWidth < 1024) setScreenSize("lg");
+      else if (window.innerWidth < 1280) setScreenSize("xl");
+      else if (window.innerWidth < 1536) setScreenSize("2xl");
+      else if (window.innerWidth > 1536) setScreenSize("3xl");
+      else setScreenSize("3xl");
+    };
+
+    updateScreenSize();
+    window.addEventListener("resize", updateScreenSize);
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
+
+  // Different transforms based on screen size
+  const getTransformValues = () => {
+    switch (screenSize) {
+      case "sm":
+        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-80%"] }; // Mobile - more movement
+      case "md":
+        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-78%"] }; // Tablet
+      case "lg":
+        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-74.7%"] }; // Desktop - your current value
+      case "xl":
+        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-77%"] };
+      case "2xl":
+        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-75.5%"] };
+      case "3xl":
+        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-74.5%"] }; // Large desktop - less movement
+      default:
+        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-69.7%"] };
+    }
+  };
+
+  const { inputRange, outputRange } = getTransformValues();
+  const x = useTransform(scrollYProgress, inputRange, outputRange);
 
   const finalScale = useTransform(scrollYProgress, [0.65, 0.8], [1, 4]);
   const lastCardOpacity = useTransform(
@@ -309,7 +347,7 @@ const Projects = () => {
 
           {/* MoreInfo only shows on desktop */}
           {!isSmallScreen && showMoreInfo && (
-            <div >
+            <div>
               <MoreInfo />
             </div>
           )}
@@ -317,7 +355,6 @@ const Projects = () => {
       </section>
 
       {/* Mobile MoreInfo - Separate section that comes after Projects */}
-  
     </>
   );
 };
