@@ -5,16 +5,23 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
-const cards = [
+// Define the card type
+type Card = {
+  id: number;
+  title: string;
+  image: string;
+};
+
+const cards: Card[] = [
   { id: 1, title: "Project One", image: "/Matric pic.jpg" },
   { id: 2, title: "Project Two", image: "/Matric pic.jpg" },
   { id: 3, title: "Project Three", image: "/Matric pic.jpg" },
 ];
 
 export default function CardTransitionDemo() {
-  const [selectedCard, setSelectedCard] = useState(null);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
-  const handleSelect = (card:any) => setSelectedCard(card);
+  const handleSelect = (card: Card) => setSelectedCard(card);
   const handleClose = () => setSelectedCard(null);
 
   return (
@@ -28,8 +35,7 @@ export default function CardTransitionDemo() {
           whileHover={{ scale: 1.03 }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
+          transition={{ duration: 0.4 }}>
           <Image
             src={card.image}
             alt="Card Image"
@@ -52,12 +58,10 @@ export default function CardTransitionDemo() {
             onClick={handleClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
+            exit={{ opacity: 0 }}>
             <motion.div
               className="w-full max-w-3xl bg-gray-800 rounded-2xl overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
+              onClick={(e) => e.stopPropagation()}>
               <Image
                 src={selectedCard.image}
                 alt="Expanded"
@@ -71,8 +75,8 @@ export default function CardTransitionDemo() {
                   {selectedCard.title}
                 </h2>
                 <p className="text-lg opacity-80">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis,
-                  reiciendis.
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                  Facilis, reiciendis.
                 </p>
               </div>
             </motion.div>

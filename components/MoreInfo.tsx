@@ -477,12 +477,10 @@ const Contact = () => {
       )
       .then(
         () => {
-          console.log("SUCCESS!");
           setSubmitStatus("success");
           setFormData({ user_name: "", user_email: "", message: "" });
         },
         (error) => {
-          console.log("FAILED...", error.text);
           setSubmitStatus("error");
         }
       )
