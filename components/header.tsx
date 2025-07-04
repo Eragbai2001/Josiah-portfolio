@@ -89,30 +89,37 @@ export default function Header() {
       {isMobileMenuOpen && (
         <nav className="lg:hidden mt-2 pb-6 border-t border-gray-200 pt-4">
           <div className="flex justify-center space-x-6 mb-4">
-            <Link
-              href="https://linkedin.com/in/yourprofile"
-              className="text-gray-800"
-              aria-label="LinkedIn">
-              <Linkedin size={24} />
-            </Link>
-            <Link
-              href="https://github.com/yourusername"
-              className="text-gray-800"
-              aria-label="GitHub">
-              <Github size={24} />
-            </Link>
-            <Link
-              href="https://instagram.com/yourusername"
-              className="text-gray-800"
-              aria-label="Instagram">
-              <Instagram size={24} />
-            </Link>
-            <Link
-              href="https://twitter.com/yourusername"
-              className="text-gray-800"
-              aria-label="Twitter">
-              <Twitter size={24} />
-            </Link>
+            <FramerMagnet>
+              <Link
+                href="https://github.com/Eragbai2001"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-800 hover:bg-[#0A66C2] hover:text-white transition-colors p-2 block rounded-md"
+                aria-label="LinkedIn">
+                <Linkedin size={18} />
+              </Link>
+            </FramerMagnet>
+            <FramerMagnet>
+              <Link
+                href="https://github.com/Eragbai2001"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-800 hover:bg-[#24292e] hover:text-white transition-colors p-2 block rounded-md"
+                aria-label="GitHub">
+                <Github size={18} />
+              </Link>
+            </FramerMagnet>
+
+            <FramerMagnet>
+              <Link
+                href="https://x.com/JAideloje47355"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-800 hover:bg-black hover:text-white transition-colors p-2 block rounded-md"
+                aria-label="X (Twitter)">
+                <RiTwitterXFill size={18} />
+              </Link>
+            </FramerMagnet>
           </div>
           <div className="flex justify-center">
             <Link

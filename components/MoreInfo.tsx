@@ -364,7 +364,7 @@ function StyleSheet() {
             right: 0;
             height: 8px;
             background: white;
-            top: 140px;
+            top: 110px;
             transform: scaleX(0);
         }
 
@@ -429,7 +429,7 @@ const projects = [
     description:
       "A modern, interactive portfolio website built with Next.js 15 and Framer Motion, featuring smooth scroll animations, dynamic project showcases, and responsive design. Inspired by Vercel's clean aesthetic and Apple's attention to detail, this portfolio combines minimalist design principles with engaging micro-interactions. The site includes an innovative horizontal project slider, animated contact form with SVG illustrations, and seamless mobile optimization. Built with TypeScript for type safety and EmailJS integration for direct contact functionality, showcasing modern web development practices and user experience design.",
     image: "/porfolio pic.png",
-    demoUrl: "#", // ✅ Current site (or your portfolio URL)
+    demoUrl: "https://josiah-portfolio1.vercel.app/", // ✅ Current site (or your portfolio URL)
     githubUrl: "https://github.com/yourusername/portfolio", // ✅ Optional: GitHub link
   },
 ];
