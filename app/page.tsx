@@ -21,8 +21,39 @@ export default function HomePage() {
       slideControls.start("visible"); // Add this line to trigger the slide animation
     }
   }, [IsInView, mainControls, slideControls]);
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Josiah Aideloje",
+    jobTitle: "Full-Stack Developer",
+    description:
+      "Full-stack developer specializing in Next.js, TypeScript, and modern web development",
+    url: "https://josiah-portfolio1.vercel.app/",
+    email: "josiahaideloje2@gmail.com",
+    telephone: "+2347042135699",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Lagos",
+      addressCountry: "Nigeria",
+    },
+    sameAs: ["https://x.com/JAideloje47355"],
+    knowsAbout: [
+      "Next.js",
+      "TypeScript",
+      "React",
+      "Node.js",
+      "Full-Stack Development",
+      "Web Development",
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <div className=" main-scroll-container">
         <div ref={ref} className="min-h-screen flex bg main-snap-section  ">
           {/* Left Section: Header + Content */}
