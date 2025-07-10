@@ -56,7 +56,7 @@ export default function Header() {
 
         {/* Right - Resume Button */}
         <Link
-          href="/resume.pdf" // Update with your actual resume path
+          href="/Resume.pdf" // Update with your actual resume path
           target="_blank"
           rel="noopener noreferrer"
           className="max-lg:hidden lg:flex items-center space-x-2 bg-black hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors">
