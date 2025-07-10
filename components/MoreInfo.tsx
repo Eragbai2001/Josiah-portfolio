@@ -368,6 +368,17 @@ function StyleSheet() {
             transform: scaleX(0);
         }
 
+          @media (min-width: 1920px) {
+        .progress {
+          top: 135px;
+        }
+      }
+         @media (min-width: 1560px) {
+        .progress {
+          top: 130px;
+        }
+      }
+
         @media (max-width: 768px) {
             .project-content {
                 flex-direction: column;

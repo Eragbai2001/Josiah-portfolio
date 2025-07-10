@@ -39,9 +39,9 @@ const Projects = () => {
       else if (window.innerWidth < 768) setScreenSize("md");
       else if (window.innerWidth < 1024) setScreenSize("lg");
       else if (window.innerWidth < 1280) setScreenSize("xl");
-      else if (window.innerWidth < 1536) setScreenSize("2xl");
-      else if (window.innerWidth > 1536) setScreenSize("3xl");
-      else setScreenSize("3xl");
+      else if (window.innerWidth < 1560) setScreenSize("2xl");
+      else if (window.innerWidth < 1900) setScreenSize("3xl");
+      else if (window.innerWidth < 1948) setScreenSize("4xl");
     };
 
     updateScreenSize();
@@ -61,11 +61,13 @@ const Projects = () => {
       case "xl":
         return { inputRange: [0.3, 0.65], outputRange: ["0%", "-77%"] };
       case "2xl":
-        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-75.5%"] };
+        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-74.9%"] };
       case "3xl":
-        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-74.5%"] }; // Large desktop - less movement
+        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-70.0%"] };
+      case "4xl":
+        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-62.3%"] }; // Large desktop - less movement
       default:
-        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-69.7%"] };
+        return { inputRange: [0.3, 0.65], outputRange: ["0%", "-71.7%"] };
     }
   };
 

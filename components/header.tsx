@@ -123,7 +123,7 @@ export default function Header() {
           </div>
           <div className="flex justify-center">
             <Link
-              href="/resume.pdf"
+              href="/Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-md">
