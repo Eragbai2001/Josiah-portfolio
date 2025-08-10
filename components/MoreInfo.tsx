@@ -140,18 +140,11 @@ export default function MoreInfo() {
             y: isContactVisible ? -50 : 0,
           }}
           transition={{ duration: 0.3 }}>
-          <h1 className="main-title max-lg:hidden">Featured Works</h1>
+          <h1 className="main-title max-lg:hidden">Featured Projects</h1>
         </motion.div>
 
         {/* Progress bar - Hide when contact is visible */}
-        <motion.div
-          className="progress mx-10 max-lg:hidden"
-          style={{ scaleX }}
-          animate={{
-            opacity: isContactVisible ? 0 : 1,
-          }}
-          transition={{ duration: 0.3 }}
-        />
+      
 
         {/* Project slides */}
         {projects.map((project) => (
