@@ -22,29 +22,36 @@ export default function HomePage() {
     }
   }, [IsInView, mainControls, slideControls]);
 
+  // Structured data for SEO
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Josiah Aideloje",
-    jobTitle: "Full-Stack Developer",
+    url: "https://josiah-portfolio1.vercel.app",
+    jobTitle: "Full-Stack Web Developer",
     description:
-      "Full-stack developer specializing in Next.js, TypeScript, and modern web development",
-    url: "https://josiah-portfolio1.vercel.app/",
-    email: "josiahaideloje2@gmail.com",
-    telephone: "+2347042135699",
+      "Full-stack web developer based in Lagos, Nigeria, specializing in Next.js, React, and Node.js applications.",
     address: {
       "@type": "PostalAddress",
       addressLocality: "Lagos",
       addressCountry: "Nigeria",
     },
-    sameAs: ["https://x.com/JAideloje47355"],
+    email: "josiahaideloje2@gmail.com",
+    telephone: "+2347042135699",
+    sameAs: [
+      "https://github.com/Eragbai2001",
+      "https://www.linkedin.com/in/yourusername",
+      "https://x.com/JAideloje47355",
+    ],
     knowsAbout: [
-      "Next.js",
-      "TypeScript",
-      "React",
-      "Node.js",
-      "Full-Stack Development",
       "Web Development",
+      "React",
+      "Next.js",
+      "Node.js",
+      "TypeScript",
+      "E-commerce",
+      "Web Applications",
+      "Full-Stack Development",
     ],
   };
 

@@ -142,8 +142,8 @@ const Projects = () => {
       icon: <MessageCircle className="w-8 h-8 text-white" />,
       title: "Exceptional Development",
       description:
-        "Josiah delivered our React Native app ahead of schedule with outstanding quality and attention to detail.",
-      author: "Sarah Chen",
+        "Josiah delivered our Mobile app ahead of schedule with outstanding quality and attention to detail.",
+      author: "Aideloje Joshua ",
       role: "Product Manager",
     },
     {

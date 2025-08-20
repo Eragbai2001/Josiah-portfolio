@@ -80,7 +80,7 @@ export default function MoreInfo() {
       <div className="bg-black min-h-screen">
         {/* Featured Works Header */}
         <div className="py-16 text-center">
-          <h1 className="text-4xl font-bold text-[#00FF9B]">Featured Works</h1>
+          <h1 className="text-4xl font-bold text-[#00FF9B]">Featured Projects</h1>
         </div>
 
         {/* Project slides - stacked vertically on mobile */}
