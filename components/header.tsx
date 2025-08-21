@@ -56,7 +56,7 @@ export default function Header() {
 
         {/* Right - Resume Button */}
         <Link
-          href="/Resume.pdf" // Update with your actual resume path
+          href="/Josiah cv.pdf" // Update with your actual resume path
           target="_blank"
           rel="noopener noreferrer"
           className="max-lg:hidden lg:flex items-center space-x-2 bg-black hover:bg-gray-700 text-white px-4 py-2 rounded-md transition-colors">
@@ -123,7 +123,7 @@ export default function Header() {
           </div>
           <div className="flex justify-center">
             <Link
-              href="/Resume.pdf"
+              href="/Josiah cv.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-md">
