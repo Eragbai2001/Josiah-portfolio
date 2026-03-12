@@ -1,6 +1,5 @@
 "use client";
 import {
-  animate,
   motion,
   MotionValue,
   useScroll,
@@ -28,12 +27,8 @@ export default function MoreInfo() {
     restDelta: 0.001,
   });
 
-  // Check if mobile
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640); // Same breakpoint as isSmallScreen
-    };
-
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
@@ -41,124 +36,122 @@ export default function MoreInfo() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsContactVisible(entry.isIntersecting);
-      },
-      { threshold: 0.5 }
+      ([entry]) => setIsContactVisible(entry.isIntersecting),
+      { threshold: 0.3 },
     );
-
-    if (contactRef.current) {
-      observer.observe(contactRef.current);
-    }
-
+    if (contactRef.current) observer.observe(contactRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // Apply scroll snap only when this component is mounted and not on mobile
   useEffect(() => {
     const handleResize = () => {
       if (containerRef.current && !isMobile) {
-        if (window.innerWidth <= 1024) {
-          containerRef.current.style.scrollSnapType = "none";
-        } else {
-          containerRef.current.style.scrollSnapType = "y mandatory";
-        }
+        containerRef.current.style.scrollSnapType =
+          window.innerWidth <= 1024 ? "none" : "y mandatory";
       }
     };
-
     handleResize();
     window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, [isMobile]);
 
-  // If mobile, render as a normal scrollable section
   if (isMobile) {
     return (
-      <div className="bg-black min-h-screen">
-        {/* Featured Works Header */}
-        <div className="py-16 text-center">
-          <h1 className="text-4xl font-bold text-[#00FF9B]">Featured Projects</h1>
+      <div className="bg-[#080808] min-h-screen">
+        <div className="py-16 text-center px-4">
+          <p className="text-[#00FF9B] text-xs font-mono tracking-[0.3em] uppercase mb-3">
+            Selected Work
+          </p>
+          <h1 className="text-5xl font-black text-white tracking-tight">
+            Projects
+          </h1>
         </div>
-
-        {/* Project slides - stacked vertically on mobile */}
-        <div className="space-y-16 px-4">
-          {projects.map((project) => (
+        <div className="space-y-24 px-4 pb-24">
+          {projects.map((project, i) => (
             <div key={project.id} className="space-y-6">
-              <div className="w-full max-w-sm mx-auto">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-64 object-contain rounded-xl shadow-lg border border-gray-700"
-                />
+              <div className="relative w-full rounded-2xl overflow-hidden bg-[#111]">
+                {project.video ? (
+                  <video
+                    src={project.video}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full aspect-video object-cover"
+                  />
+                ) : (
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    className="w-full aspect-video object-cover"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                <span className="absolute top-3 left-3 text-[10px] text-[#00FF9B] font-mono bg-black/60 px-2 py-1 rounded-full backdrop-blur-sm">
+                  0{i + 1}
+                </span>
               </div>
-
-              <div className="text-center space-y-4 max-w-md mx-auto">
-                <h2 className="text-2xl font-bold text-white">
+              <div className="space-y-3 px-1">
+                <h2 className="text-2xl font-black text-white tracking-tight">
                   {project.title}
                 </h2>
-
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <p className="text-gray-500 text-sm leading-relaxed">
                   {project.description}
                 </p>
-
                 <button
                   onClick={() => window.open(project.demoUrl, "_blank")}
-                  className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors cursor-pointer disabled:opacity-50"
+                  className="mt-2 bg-[#00FF9B] text-black px-6 py-3 rounded-full font-bold text-sm hover:bg-white transition-colors"
                   disabled={project.demoUrl === "#"}>
-                  {project.demoUrl === "#" ? "Live Site" : "See Demo"}
+                  {project.demoUrl === "#" ? "Coming Soon" : "View Live →"}
                 </button>
               </div>
             </div>
           ))}
         </div>
-
-        {/* Contact Section */}
-        <div className="mt-16">
+        <div className="mt-8">
           <Contact />
         </div>
       </div>
     );
   }
 
-  // Desktop version (original code)
   return (
     <div>
       <div
         ref={containerRef}
-        className="fixed inset-0 overflow-y-auto bg-gray-900 z-50 hide-scrollbar"
-        style={{
-          height: "100vh",
-        }}>
-        {/* Featured Works Header - Hide when contact is visible */}
+        className="fixed inset-0 overflow-y-auto bg-[#080808] z-50 hide-scrollbar"
+        style={{ height: "100vh", scrollSnapType: "y mandatory" }}>
+        {/* Fixed header bar */}
         <motion.div
-          className="header-section"
-          animate={{
-            opacity: isContactVisible ? 0 : 1,
-            y: isContactVisible ? -50 : 0,
+          className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-10 py-5"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(8,8,8,0.95) 0%, transparent 100%)",
           }}
-          transition={{ duration: 0.3 }}>
-          <h1 className="main-title max-lg:hidden">Featured Projects</h1>
+          animate={{ opacity: isContactVisible ? 0 : 1 }}
+          transition={{ duration: 0.4 }}>
+          <p className="text-[#00FF9B] text-[11px] font-mono tracking-[0.3em] uppercase">
+            Selected Work
+          </p>
+          <p className="text-gray-600 text-[11px] font-mono tracking-widest">
+            {projects.length} Projects
+          </p>
         </motion.div>
 
-        {/* Progress bar - Hide when contact is visible */}
-      
-
-        {/* Project slides */}
-        {projects.map((project) => (
+        {projects.map((project, index) => (
           <ProjectSlide
             key={project.id}
             id={project.id}
+            index={index}
+            total={projects.length}
             title={project.title}
             description={project.description}
             image={project.image}
+            video={project.video}
             demoUrl={project.demoUrl}
           />
         ))}
 
-        {/* Contact Section with ref */}
         <div ref={contactRef}>
           <Contact />
         </div>
@@ -171,57 +164,89 @@ export default function MoreInfo() {
 
 function ProjectSlide({
   id,
+  index,
+  total,
   title,
   description,
   image,
+  video,
   demoUrl,
 }: {
   id: number;
+  index: number;
+  total: number;
   title: string;
   description: string;
   image: string;
+  video?: string;
   demoUrl?: string;
 }) {
   const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref });
-  const y = useParallax(scrollYProgress, 100);
+  const isInView = useInView(ref, { margin: "-20% 0px -20% 0px" });
 
   return (
-    <section className="project-slide">
-      <div ref={ref} className="project-content">
-        <div className="project-image">
-          <img src={image} alt={title} />
-        </div>
+    <section
+      ref={ref}
+      className="project-slide"
+      style={{ scrollSnapAlign: "start" }}>
+      {/* Full-width media on top, info below — big cinematic layout */}
+      <div className="project-inner">
+        {/* Media block — LARGE */}
+        <motion.div
+          className="media-block"
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={
+            isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.96 }
+          }
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
+          <div className="media-frame">
+            {video ? (
+              <video
+                src={video}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="media-asset"
+              />
+            ) : (
+              <img src={image} alt={title} className="media-asset" />
+            )}
 
-        {/* Right side - Content */}
-        <div className="project-info">
-          <motion.h2
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}>
-            {title}
-          </motion.h2>
+            {/* Subtle bottom gradient overlay */}
+            <div className="media-overlay" />
 
-          <motion.p
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="project-description text-gray-500">
-            {description}
-          </motion.p>
+            {/* Index tag */}
+            <div className="index-tag">
+              <span className="index-num">0{index + 1}</span>
+              <span className="index-sep">/</span>
+              <span className="index-total">0{total}</span>
+            </div>
+          </div>
+        </motion.div>
 
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            onClick={() => window.open(demoUrl || "#", "_blank")} // ✅ Fixed: use demoUrl prop instead of image.demoUrl
-            className="demo-button"
-            style={{ y: useTransform(y, [0, 100], [0, -20]) }}
-            disabled={!demoUrl || demoUrl === "#"} // ✅ Fixed: use demoUrl prop instead of image.demoUrl
-          >
-            {!demoUrl || demoUrl === "#" ? "Live Site" : "See Demo"}
-          </motion.button>
-        </div>
+        {/* Info block */}
+        <motion.div
+          className="info-block"
+          initial={{ opacity: 0, y: 24 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}>
+          <div className="info-left">
+            <h2 className="project-title">{title}</h2>
+            <p className="project-desc">{description}</p>
+          </div>
+
+          <div className="info-right">
+            <motion.button
+              onClick={() => window.open(demoUrl || "#", "_blank")}
+              className="cta-button"
+              whileHover={{ scale: 1.04, backgroundColor: "#fff" }}
+              whileTap={{ scale: 0.97 }}
+              disabled={!demoUrl || demoUrl === "#"}>
+              {!demoUrl || demoUrl === "#" ? "Coming Soon" : "View Live →"}
+            </motion.button>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -234,176 +259,185 @@ function useParallax(value: MotionValue<number>, distance: number) {
 function StyleSheet() {
   return (
     <style>{`
-              .header-section {
-            height: 20vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-           
-            scroll-snap-align: start;
-            position: fixed;
-            inset: 0 0 auto 0; /* top right bottom left */
+      .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      .hide-scrollbar::-webkit-scrollbar { display: none; }
 
-        }
-
-           .hide-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
-      
-      .hide-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-      
-
-        .main-title {
-            font-size: 4rem;
-            font-weight: 800;
-            background: #00FF9B;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
-            letter-spacing: -2px;
-        }
-
-        .project-slide {
-            height: 100vh;
-            scroll-snap-align: start;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 5%;
-            background: black;
-        }
-
-        .contact-slide {
-          height: 100vh;
-            scroll-snap-align: start;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 5%;
-            background: black;
-        
-        }
-        .project-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 1200px;
-            width: 100%;
-            gap: 4rem;
-        }
-
-        .project-image {
-            flex: 0 0 45%;
-            max-width: 500px;
-        }
-
-        .project-image img {
-            width: 100%;
-            height: 400px;
-            object-fit: contain;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            border: 3px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .project-info {
-            flex: 1;
-            color: white;
-            padding-left: 2rem;
-        }
-
-        .project-info h2 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin: 0 0 1.5rem 0;
-            color: white;
-            line-height: 1.1;
-            letter-spacing: -1px;
-        }
-
-        .project-description {
-            font-size: 1.1rem;
-            line-height: 1.7;
-           
-            margin-bottom: 2.5rem;
-           
-        }
-
-        .demo-button {
-            background: white;
-            color:#000000;
-            border: none;
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
-        }
-
-        .demo-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
-        }
-
-           .progress {
-            position: fixed;
-            left: 0;
-            right: 0;
-            height: 8px;
-            background: white;
-            top: 110px;
-            transform: scaleX(0);
-        }
-
-          @media (min-width: 1920px) {
-        .progress {
-          top: 135px;
-        }
-      }
-         @media (min-width: 1560px) {
-        .progress {
-          top: 130px;
-        }
+      /* ── Slide Layout ── */
+      .project-slide {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 70px 5% 3% 5%;
+        background: #080808;
       }
 
-        @media (max-width: 768px) {
-            .project-content {
-                flex-direction: column;
-                text-align: center;
-                gap: 2rem;
-            }
+      .project-inner {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 1400px;
+        height: 100%;
+        gap: 0;
+      }
 
-            .project-image {
-                flex: none;
-                max-width: 350px;
-            }
+      /* ── Media ── */
+      .media-block {
+        flex: 1 1 0;
+        min-height: 0;
+      }
 
-            .project-image img {
-                height: 300px;
-            }
+      .media-frame {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 420px;
+        border-radius: 20px;
+        overflow: hidden;
+        background: #111;
+      }
 
-            .project-info {
-                padding-left: 0;
-            }
+      .media-asset {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 20px;
+      }
 
-            .project-info h2 {
-                font-size: 2.5rem;
-            }
+      .media-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          transparent 55%,
+          rgba(8,8,8,0.55) 100%
+        );
+        border-radius: 20px;
+        pointer-events: none;
+      }
 
-            .main-title {
-                font-size: 2.5rem;
-            }
+      .index-tag {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(0,0,0,0.55);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 100px;
+        padding: 5px 12px;
+      }
 
-            .project-slide {
-                padding: 0 2%;
-            }
-        }
+      .index-num {
+        font-size: 11px;
+        font-weight: 700;
+        color: #00FF9B;
+        font-family: monospace;
+        letter-spacing: 0.1em;
+      }
+
+      .index-sep {
+        font-size: 11px;
+        color: rgba(255,255,255,0.2);
+        font-family: monospace;
+      }
+
+      .index-total {
+        font-size: 11px;
+        color: rgba(255,255,255,0.35);
+        font-family: monospace;
+        letter-spacing: 0.1em;
+      }
+
+      /* ── Info Bar ── */
+      .info-block {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 4px 0 4px;
+        gap: 2rem;
+      }
+
+      .info-left {
+        display: flex;
+        align-items: baseline;
+        gap: 2rem;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .project-title {
+        font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .project-desc {
+        font-size: 0.85rem;
+        color: #555;
+        line-height: 1.6;
+        max-width: 55ch;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+
+      .info-right {
+        flex-shrink: 0;
+      }
+
+      .cta-button {
+        background: #00FF9B;
+        color: #000;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-size: 0.85rem;
+        font-weight: 800;
+        border-radius: 100px;
+        cursor: pointer;
+        transition: background 0.25s ease, transform 0.2s ease;
+        white-space: nowrap;
+        letter-spacing: 0.02em;
+      }
+
+      .cta-button:disabled {
+        background: #222;
+        color: #444;
+        cursor: not-allowed;
+      }
+
+      /* ── Contact slide ── */
+      .contact-slide {
+        height: 100vh;
+        scroll-snap-align: start;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5%;
+        background: #080808;
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 1024px) {
+        .project-slide { padding: 70px 4% 3% 4%; }
+        .media-frame { min-height: 320px; }
+        .info-left { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+        .project-title { white-space: normal; font-size: 1.6rem; }
+      }
+
+      @media (max-width: 768px) {
+        .media-frame { min-height: 240px; }
+        .project-title { font-size: 1.4rem; }
+      }
     `}</style>
   );
 }
@@ -411,30 +445,66 @@ function StyleSheet() {
 const projects = [
   {
     id: 1,
-    title: " E-Commerce Platform",
+    title: "Coursify",
     description:
-      "Full-stack ecommerce web application built with Next.js 14, TypeScript, and Prisma ORM featuring comprehensive admin dashboard, storefront interface, and modern authentication system. This open-source project includes dual-app architecture with separate admin panel and customer-facing storefront, complete with product management, order processing, payment integration, and email verification capabilities. Customized and enhanced to meet specific client requirements including advanced product categorization, automated inventory management, custom checkout flow, and integrated blog system.",
-    image: "/Ecommerce web app.png",
-    demoUrl: "https://prisma-ecommerce-website.vercel.app/login", // ✅ Add your actual demo URL
-    githubUrl: "https://github.com/yourusername/ecommerce-platform", // ✅ Optional: GitHub link
+      "A platform for university students to share past questions, resources, and study materials. Built for Landmark University, now serving 400+ active users.",
+    image: "/cbt pic.png",
+    video: "/video/coursify.mp4",
+    demoUrl: "https://coursify.dev/",
   },
   {
     id: 2,
-    title: "Mock CBT Software ",
+    title: "KDR — Manga Artist Portfolio",
     description:
-      " A mock-based Computer Based Test CBT prep tool that trains students using recent past questions and provides a realistic exam simulation experience. It helps students build confidence, reduce anxiety, and get familiar with the actual computer-based test format used in their schools, this software was built for Landmark University, Omu-Aran, Kwara State, Nigeria. It features a user-friendly interface, real-time performance tracking, and detailed analytics to help students identify their strengths and weaknesses.",
-    image: "/cbt pic.png",
-    demoUrl: "https://x.com/JAideloje47355/status/1929314900846756165", // ✅ Add your actual demo URL
-    githubUrl: "https://github.com/yourusername/cbt-software", // ✅ Optional: GitHub link
+      "A dark, editorial portfolio built for a manga artist and visual storyteller. Features smooth animations and a gallery-focused layout.",
+    image: "/porfolio pic.png",
+    video: "/video/kdr.mp4",
+    demoUrl: "https://kdr.vercel.app/",
   },
   {
     id: 3,
-    title: "My Portfolio ",
+    title: "Vera Skin",
     description:
-      "A modern, interactive portfolio website built with Next.js 15 and Framer Motion, featuring smooth scroll animations, dynamic project showcases, and responsive design. Inspired by Vercel's clean aesthetic and Apple's attention to detail, this portfolio combines minimalist design principles with engaging micro-interactions. The site includes an innovative horizontal project slider, animated contact form with SVG illustrations, and seamless mobile optimization. Built with TypeScript for type safety and EmailJS integration for direct contact functionality, showcasing modern web development practices and user experience design.",
+      "A premium skincare landing page with immersive product visuals, ingredient showcases, and a luxury brand feel.",
+    image: "/landing.png",
+    video: "/video/vera.mp4",
+    demoUrl: "https://vera-gilt.vercel.app/",
+  },
+  {
+    id: 4,
+    title: "X-Space",
+    description:
+      "An interactive space exploration website with immersive visuals, parallax effects, and educational content about the cosmos.",
+    image: "/og-image.jpg",
+    video: "/video/xspace.mp4",
+    demoUrl: "https://x-space-pied.vercel.app/",
+  },
+  {
+    id: 5,
+    title: "E-Commerce Platform",
+    description:
+      "A full-featured e-commerce web application with product listings, cart functionality, user authentication, and Stripe payment processing.",
+    image: "/Ecommerce web app.png",
+    video: undefined,
+    demoUrl: "https://prisma-ecommerce-website.vercel.app/login",
+  },
+  {
+    id: 6,
+    title: "Mock CBT Software",
+    description:
+      "A mock-based CBT prep tool that trains students using recent past questions and provides a realistic exam simulation. Built for Landmark University, Nigeria.",
+    image: "/cbt pic.png",
+    video: undefined,
+    demoUrl: "https://x.com/JAideloje47355/status/1929314900846756165",
+  },
+  {
+    id: 7,
+    title: "My Portfolio",
+    description:
+      "A modern, interactive portfolio website built with Next.js 15 and Framer Motion, featuring smooth scroll animations and dynamic project showcases.",
     image: "/porfolio pic.png",
-    demoUrl: "https://josiah-portfolio1.vercel.app/", // ✅ Current site (or your portfolio URL)
-    githubUrl: "https://github.com/yourusername/portfolio", // ✅ Optional: GitHub link
+    video: undefined,
+    demoUrl: "https://josiah-portfolio1.vercel.app/",
   },
 ];
 
@@ -446,9 +516,7 @@ const Contact = () => {
   const [submitStatus, setSubmitStatus] = useState<
     "idle" | "success" | "error"
   >("idle");
-
   const form = useRef<HTMLFormElement>(null);
-
   const [formData, setFormData] = useState({
     user_name: "",
     user_email: "",
@@ -456,140 +524,106 @@ const Contact = () => {
   });
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus("idle");
-
     emailjs
       .sendForm(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
         form.current!,
-        {
-          publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!,
-        }
+        { publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY! },
       )
       .then(
         () => {
           setSubmitStatus("success");
           setFormData({ user_name: "", user_email: "", message: "" });
         },
-        (error) => {
+        () => {
           setSubmitStatus("error");
-        }
+        },
       )
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .finally(() => setIsSubmitting(false));
   };
 
-  const isInView = useInView(ref, {
-    margin: "-100px",
-    once: false,
-  });
+  const isInView = useInView(ref, { margin: "-100px", once: false });
 
   useEffect(() => {
     if (isInView) {
       setShowForm(false);
       setAnimationKey((prev) => prev + 1);
-
-      const timer = setTimeout(() => {
-        setShowForm(true);
-      }, 4000);
-
+      const timer = setTimeout(() => setShowForm(true), 4000);
       return () => clearTimeout(timer);
     }
   }, [isInView]);
 
-  // Add this useEffect after your existing useEffects
   useEffect(() => {
     if (submitStatus === "success") {
-      const timer = setTimeout(() => {
-        setSubmitStatus("idle");
-      }, 3000); // Hide after 3 seconds
-
+      const timer = setTimeout(() => setSubmitStatus("idle"), 3000);
       return () => clearTimeout(timer);
     }
   }, [submitStatus]);
 
   return (
     <div
-      className="text-white flex items-center justify-center py-8 sm:py-12 lg:py-16 px-4 contact-slide min-h-screen bg-black"
+      className="text-white flex items-center justify-center py-8 sm:py-12 lg:py-16 px-4 contact-slide min-h-screen"
       ref={ref}>
       <div className="w-full max-w-6xl mx-auto">
-        <div className=" grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-          {/* Left side - Contact Info */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
+          {/* Left */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.7 }}
             viewport={{ once: false }}
-            className="space-y-12 max-lg:item-center lg:flex lg:flex-col ">
+            className="space-y-12 lg:flex lg:flex-col justify-center">
             <div>
-              <h1 className="text-6xl lg:text-7xl font-bold leading-tight mb-4">
-                Let's work
+              <p className="text-[#00FF9B] text-[11px] font-mono tracking-[0.3em] uppercase mb-5">
+                Get in touch
+              </p>
+              <h1 className="text-6xl lg:text-7xl font-black leading-[0.95] tracking-tight mb-4">
+                Let&apos;s work
                 <br />
-                together
+                <span className="text-[#00FF9B]">together.</span>
               </h1>
             </div>
-
-            <div className="space-y-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Mail</h3>
-                <p className="text-gray-300">josiahaideloje2@gmail.com</p>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Address</h3>
-                <p className="text-gray-300">
-                  #3 Graham Blessing Estate, Army Range, Okoja, Lagos, Nigeria
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-semibold mb-2">Phone</h3>
-                <p className="text-gray-300">+2347042135699</p>
-              </div>
+            <div className="space-y-7">
+              {[
+                { label: "Mail", value: "josiahaideloje2@gmail.com" },
+                { label: "Location", value: "Lagos, Nigeria" },
+                { label: "Phone", value: "+2347042135699" },
+              ].map(({ label, value }) => (
+                <div key={label}>
+                  <p className="text-[10px] font-mono text-gray-600 tracking-[0.25em] uppercase mb-1">
+                    {label}
+                  </p>
+                  <p className="text-white font-medium text-sm">{value}</p>
+                </div>
+              ))}
             </div>
           </motion.div>
 
-          {/* Right side - Phone SVG and Form */}
-          <div
-            className="flex flex-col items-center justify-center relative min-h-[400px] lg:min-h-[500px]
-        ">
-            {/* ✅ Complete Phone SVG Animation */}
+          {/* Right — phone anim → form */}
+          <div className="flex flex-col items-center justify-center relative min-h-[420px]">
             <motion.div
               key={`phone-${animationKey}`}
-              className="phoneSvg absolute flex items-center justify-center z-10"
+              className="absolute flex items-center justify-center z-10"
               initial={{ opacity: 1, zIndex: 10 }}
               animate={{
                 opacity: showForm ? 0 : 1,
                 zIndex: showForm ? -1 : 10,
               }}
-              transition={{ delay: 3, duration: 1 }}
-              onAnimationComplete={(definition) => {
-                if (
-                  typeof definition === "object" &&
-                  definition &&
-                  "opacity" in definition &&
-                  definition.opacity === 0
-                ) {
-                  setShowForm(true);
-                }
-              }}>
+              transition={{ delay: 3, duration: 1 }}>
               <svg
-                width="450px"
-                height="450px"
+                width="420px"
+                height="420px"
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -601,10 +635,7 @@ const Contact = () => {
                   strokeLinecap="butt"
                   fill="none"
                   initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{
-                    pathLength: 1,
-                    opacity: 1,
-                  }}
+                  animate={{ pathLength: 1, opacity: 1 }}
                   transition={{ duration: 2, delay: 0.5 }}
                 />
                 <motion.path
@@ -615,10 +646,7 @@ const Contact = () => {
                   strokeLinecap="butt"
                   fill="none"
                   initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{
-                    pathLength: 1,
-                    opacity: 1,
-                  }}
+                  animate={{ pathLength: 1, opacity: 1 }}
                   transition={{ duration: 2, delay: 1 }}
                 />
                 <motion.path
@@ -631,77 +659,65 @@ const Contact = () => {
               </svg>
             </motion.div>
 
-            {/* Form */}
             <motion.form
               ref={form}
               key={`form-${animationKey}`}
               onSubmit={handleSubmit}
-              className="w-full space-y-6"
+              className="w-full space-y-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: showForm ? 1 : 0 }}
               transition={{ duration: 1 }}>
-              <div>
+              {[
+                { type: "text", name: "user_name", placeholder: "Your name" },
+                {
+                  type: "email",
+                  name: "user_email",
+                  placeholder: "Your email",
+                },
+              ].map((field) => (
                 <input
-                  type="text"
-                  name="user_name"
-                  placeholder="Name"
-                  value={formData.user_name}
+                  key={field.name}
+                  type={field.type}
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  value={formData[field.name as keyof typeof formData]}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-4 bg-transparent border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#00FF9B] transition-colors"
                   required
                   disabled={isSubmitting}
+                  className="w-full px-5 py-4 bg-white/[0.03] border border-white/[0.07] rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-[#00FF9B]/50 transition-colors text-sm"
                 />
-              </div>
-
-              <div>
-                <input
-                  type="email"
-                  name="user_email"
-                  placeholder="Email"
-                  value={formData.user_email}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-4 bg-transparent border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#00FF9B] transition-colors"
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-
-              <div>
-                <textarea
-                  name="message"
-                  placeholder="Message"
-                  rows={6}
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-4 bg-transparent border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#00FF9B] transition-colors resize-none"
-                  required
-                  disabled={isSubmitting}
-                />
-              </div>
-
+              ))}
+              <textarea
+                name="message"
+                placeholder="Tell me about your project..."
+                rows={5}
+                value={formData.message}
+                onChange={handleInputChange}
+                required
+                disabled={isSubmitting}
+                className="w-full px-5 py-4 bg-white/[0.03] border border-white/[0.07] rounded-xl text-white placeholder-gray-600 focus:outline-none focus:border-[#00FF9B]/50 transition-colors resize-none text-sm"
+              />
               {submitStatus === "success" && (
-                <div className="text-[#00FF9B] text-center font-semibold">
-                  Message sent successfully! 🎉
-                </div>
+                <p className="text-[#00FF9B] text-center font-semibold text-sm">
+                  Message sent! I&apos;ll get back to you soon 🎉
+                </p>
               )}
-
               {submitStatus === "error" && (
-                <div className="text-red-400 text-center font-semibold">
-                  Failed to send message. Please try again.
-                </div>
+                <p className="text-red-400 text-center font-semibold text-sm">
+                  Failed to send. Please try again.
+                </p>
               )}
-
               <motion.button
                 type="submit"
                 whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-                whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
+                whileTap={{ scale: isSubmitting ? 1 : 0.97 }}
                 disabled={isSubmitting}
-                className={`w-full py-4 font-semibold rounded-lg transition-colors cursor-pointer ${
+                className={`w-full py-4 font-bold rounded-xl text-sm transition-colors ${
                   isSubmitting
-                    ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                    : "bg-[#00FF9B] text-black hover:bg-[#00FF9B]"
+                    ? "bg-white/5 text-gray-600 cursor-not-allowed"
+                    : "bg-[#00FF9B] text-black hover:bg-white cursor-pointer"
                 }`}>
-                {isSubmitting ? "Sending..." : "Submit"}
+                {isSubmitting ? "Sending..." : "Send Message →"}
               </motion.button>
             </motion.form>
           </div>

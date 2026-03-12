@@ -1,209 +1,246 @@
 "use client";
 
-import { motion } from "framer-motion";
+import Header from "@/components/header";
 import Image from "next/image";
-import Link from "next/link";
+import { motion, useAnimation, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 
-export default function AboutPage() {
+import SmoothFollower from "@/components/SmoothFollower";
+import Projects from "@/components/Projects";
+import StatsBar from "@/components/StatsBar";
+
+// Dynamic import to avoid SSR issues with Three.js
+const HeroScene = dynamic(() => import("@/components/HeroScene"), {
+  ssr: false,
+});
+
+export default function HomePage() {
+  const ref = useRef(null);
+  const mainControls = useAnimation();
+  const slideControls = useAnimation();
+  const [mounted, setMounted] = useState(false);
+
+  const IsInView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (IsInView) {
+      mainControls.start("visible");
+      slideControls.start("visible");
+    }
+  }, [IsInView, mainControls, slideControls]);
+
+  // Structured data for SEO
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Josiah Aideloje",
+    url: "https://josiah-portfolio1.vercel.app",
+    jobTitle: "Full-Stack Web Developer",
+    description:
+      "Full-stack web developer based in Nigeria, specializing in Next.js, React, and Node.js applications.",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Nigeria",
+      addressCountry: "Nigeria",
+    },
+    email: "josiahaideloje2@gmail.com",
+    telephone: "+2347042135699",
+    sameAs: [
+      "https://github.com/Eragbai2001",
+      "https://www.linkedin.com/in/yourusername",
+      "https://x.com/JAideloje47355",
+    ],
+    knowsAbout: [
+      "Web Development",
+      "React",
+      "Next.js",
+      "Node.js",
+      "TypeScript",
+      "E-commerce",
+      "Web Applications",
+      "Full-Stack Development",
+    ],
+  };
+
   return (
-    <div className="min-h-screen bg-white px-4 sm:px-6 lg:px-8 py-16">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Left Column - Photo and Personal Info */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="relative w-full h-[500px] rounded-2xl overflow-hidden mb-8">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <div className="main-scroll-container">
+        {/* ── HERO SECTION ── */}
+        <div ref={ref} className="min-h-screen flex bg main-snap-section relative overflow-hidden">
+          
+          {/* 3D Background Scene - only on desktop */}
+          {mounted && (
+            <div className="hidden md:block">
+              <HeroScene />
+            </div>
+          )}
+
+          {/* Left Section: Header + Content */}
+          <div className="w-[60%] max-md:w-[100%] bg-white/95 flex flex-col px-10 py-6 relative z-10">
+            <Header />
+
+            {/* Mobile Image */}
+            <div className="relative w-full max-w-[280px] h-[280px] sm:max-w-[320px] sm:h-[320px] md:hidden mx-auto mt-6 mb-8 rounded-lg overflow-hidden shadow-lg">
               <Image
                 src="/Matric pic.jpg"
-                alt="Josiah Aideloje - Web Developer from Lagos, Nigeria"
+                alt="Portfolio"
                 fill
                 style={{ objectFit: "cover" }}
                 priority
-                className="rounded-2xl"
+                className="grayscale hover:grayscale-0 transition-all duration-300"
               />
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-gray-50 p-6 rounded-xl">
-              <h2 className="font-bold text-xl mb-4 text-gray-900">
-                Contact Information
-              </h2>
-              <div className="space-y-3">
-                <div className="flex items-start">
-                  <div className="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full mr-3">
-                    <span className="text-green-600">📍</span>
+            {/* Main Content */}
+            <div className="flex-grow flex flex-col justify-between">
+              <div className="mt-5 lg:mt-20 relative">
+                <div>
+                  {/* Hey, I'm Josiah */}
+                  <div className="relative mb-2 overflow-hidden w-32 md:w-40">
+                    <motion.div
+                      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                      initial="hidden"
+                      animate={mainControls}
+                      transition={{ duration: 0.5, delay: 0.25 }}>
+                      <p className="text-sm md:text-base text-gray-700">Hey, I'm Josiah</p>
+                    </motion.div>
+                    <motion.div
+                      variants={{ hidden: { left: 0 }, visible: { left: "100%" } }}
+                      initial="hidden"
+                      animate={slideControls}
+                      transition={{ duration: 0.8, ease: "easeInOut", delay: 0.1 }}
+                      style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, backgroundColor: "#00FF9B", zIndex: 20 }}
+                    />
                   </div>
-                  <div>
-                    <p className="font-medium text-gray-900">Location</p>
-                    <p className="text-gray-600">Lagos, Nigeria</p>
+
+                  {/* Full Stack */}
+                  <div className="relative mb-1 overflow-hidden w-72 md:w-96">
+                    <motion.div
+                      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                      initial="hidden"
+                      animate={mainControls}
+                      transition={{ duration: 0.5, delay: 0.35 }}>
+                      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-[#00FF9B]">
+                        Full Stack
+                      </h1>
+                    </motion.div>
+                    <motion.div
+                      variants={{ hidden: { left: 0 }, visible: { left: "100%" } }}
+                      initial="hidden"
+                      animate={slideControls}
+                      transition={{ duration: 1.0, ease: "easeInOut", delay: 0.3 }}
+                      style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, backgroundColor: "#00FF9B", zIndex: 20 }}
+                    />
                   </div>
+
+                  {/* Web Developer */}
+                  <div className="relative overflow-hidden w-80 md:w-[35rem]">
+                    <motion.div
+                      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                      initial="hidden"
+                      animate={mainControls}
+                      transition={{ duration: 0.5, delay: 0.45 }}>
+                      <h1 className="text-5xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-800">
+                        Web Developer
+                        <span className="animate-pulse text-gray-800">_</span>
+                      </h1>
+                    </motion.div>
+                    <motion.div
+                      variants={{ hidden: { left: 0 }, visible: { left: "100%" } }}
+                      initial="hidden"
+                      animate={slideControls}
+                      transition={{ duration: 1.2, ease: "easeInOut", delay: 0.5 }}
+                      style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, backgroundColor: "#00FF9B", zIndex: 20 }}
+                    />
+                  </div>
+
+                  {/* Description */}
+                  <div className="relative mt-6 overflow-hidden w-64 md:w-96 lg:w-[38rem]">
+                    <motion.div
+                      variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                      initial="hidden"
+                      animate={mainControls}
+                      transition={{ duration: 0.5, delay: 0.55 }}>
+                      <p className="text-base sm:text-lg leading-relaxed text-gray-600">
+                        I specialize in Node.js, React, Next.js, and TypeScript,
+                        and I enjoy solving tricky problems with creative solutions.
+                        I'm passionate about turning ideas into functional and engaging web applications.
+                      </p>
+                    </motion.div>
+                    <motion.div
+                      variants={{ hidden: { left: 0 }, visible: { left: "100%" } }}
+                      initial="hidden"
+                      animate={slideControls}
+                      transition={{ duration: 1.4, ease: "easeInOut", delay: 0.7 }}
+                      style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, backgroundColor: "#00FF9B", zIndex: 20 }}
+                    />
+                  </div>
+
+                  {/* Mini stats pills - new addition */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 1.2 }}
+                    className="flex flex-wrap gap-2 mt-6"
+                  >
+                    {["18 y/o", "First Class", "400+ Users", "Landmark Uni"].map((pill) => (
+                      <span
+                        key={pill}
+                        className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-medium border border-gray-200"
+                      >
+                        {pill}
+                      </span>
+                    ))}
+                  </motion.div>
                 </div>
-                <div className="flex items-start">
-                  <div className="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full mr-3">
-                    <span className="text-green-600">📧</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">Email</p>
-                    <a
-                      href="mailto:josiahaideloje2@gmail.com"
-                      className="text-green-600 hover:underline">
-                      josiahaideloje2@gmail.com
-                    </a>
-                  </div>
-                </div>
-                <div className="flex items-start">
-                  <div className="w-8 h-8 flex items-center justify-center bg-green-100 rounded-full mr-3">
-                    <span className="text-green-600">📱</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">Phone</p>
-                    <a
-                      href="tel:+2347042135699"
-                      className="text-green-600 hover:underline">
-                      +234 704 213 5699
-                    </a>
+              </div>
+
+              {/* Bottom content */}
+              <div className="mb-12">
+                <div className="absolute bottom-0 lg:bottom-10 left-10">
+                  <div className="w-12 h-12 text-gray-800 animate-bounce">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M12 4L12 20M12 20L6 14M12 20L18 14"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
 
-          {/* Right Column - About Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}>
-            {/* SEO-Optimized H1 - includes name and location */}
-            <h1 className="text-4xl sm:text-5xl font-bold mb-6 text-gray-900">
-              About Josiah Aideloje
-              <span className="block text-2xl sm:text-3xl text-green-600 mt-2">
-                Full-Stack Developer from Nigeria
-              </span>
-            </h1>
-
-            <div className="prose prose-lg max-w-none text-gray-600 space-y-6">
-              <p>
-                Hello! I'm Josiah, a passionate full-stack web developer based
-                in Lagos, Nigeria. With expertise in Next.js, React, and
-                Node.js, I craft digital experiences that combine clean code,
-                stunning design, and optimal performance.
-              </p>
-
-              <p>
-                My journey in web development started at Landmark University,
-                where I pursued my interest in computer science and developed my
-                first web applications. Since then, I've been committed to
-                continuous learning, staying up-to-date with the latest
-                technologies and best practices in this fast-evolving industry.
-              </p>
-
-              <p>
-                I specialize in building full-stack applications that solve real
-                problems. Whether it's an e-commerce platform, a CBT system, or
-                an interactive portfolio, I approach each project with attention
-                to detail and a focus on delivering exceptional value.
-              </p>
-
-              <div className="py-4">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  Why Work With Me?
-                </h2>
-                <ul className="list-none space-y-4 pl-0">
-                  {benefits.map((benefit, i) => (
-                    <li key={i} className="flex items-start">
-                      <span className="text-green-600 mr-3">✓</span>
-                      <span>{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="py-4">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  My Story
-                </h2>
-                <p>
-                  Growing up in Nigeria, I was always fascinated by technology
-                  and how it could bridge gaps and create opportunities. This
-                  curiosity led me to explore web development, where I
-                  discovered my passion for creating digital solutions that make
-                  a difference.
-                </p>
-                <p className="mt-4">
-                  Today, I work with clients across Nigeria and internationally,
-                  helping businesses establish their online presence and develop
-                  custom web applications. Each project is an opportunity to
-                  learn, grow, and deliver results that exceed expectations.
-                </p>
-              </div>
-
-              <div className="py-4">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                  Education & Experience
-                </h2>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-semibold text-gray-900">
-                      Computer Science, Landmark University
-                    </h3>
-                    <p className="text-gray-600">BSc • 2018 - 2022</p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">
-                      Full Stack Web Developer
-                    </h3>
-                    <p className="text-gray-600">Freelance • 2020 - Present</p>
-                    <p className="text-gray-600 mt-1">
-                      Developing custom web applications for clients across
-                      various industries, with a focus on modern JavaScript
-                      frameworks and responsive design.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 flex space-x-4">
-              <Link
-                href="/services"
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium inline-flex items-center transition-all">
-                View My Services
-                <svg
-                  className="ml-2 w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </Link>
-              <Link
-                href="/contact"
-                className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-full font-medium inline-flex items-center transition-all">
-                Contact Me
-              </Link>
-            </div>
-          </motion.div>
+          {/* Right Section: Fullscreen Image */}
+          <div className="hidden md:block w-[40%] relative z-10">
+            <Image
+              src="/Matric pic.jpg"
+              alt="Portfolio"
+              fill
+              style={{ objectFit: "cover" }}
+              priority
+            />
+          </div>
         </div>
+
+        {/* ── STATS BAR ── */}
+        <StatsBar />
+
+        {/* ── REVIEWS + PROJECTS ── */}
+        <Projects />
       </div>
-    </div>
+    </>
   );
 }
-
-const benefits = [
-  "Local expertise with international standards - understand the Nigerian tech landscape",
-  "End-to-end development capabilities - from concept to deployment and maintenance",
-  "Responsive communication - clear updates and quick response times",
-  "Performance-focused approach - optimized for speed and SEO",
-  "Collaborative process - your vision paired with my technical expertise",
-];
