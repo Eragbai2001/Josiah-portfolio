@@ -30,7 +30,7 @@ const structuredData = {
   telephone: "+2347042135699",
   sameAs: [
     "https://github.com/Eragbai2001",
-    "https://www.linkedin.com/in/yourusername",
+    "https://x.com/JAideloje47355",
     "https://x.com/JAideloje47355",
   ],
   knowsAbout: [
@@ -187,7 +187,7 @@ export default function HomePage() {
                     View Projects →
                   </a>
                   <a
-                    href="/Josiah cv.pdf"
+                    href="/Josiah_Aideloje_Resume_v2%20(1).docx"
                     target="_blank"
                     rel="noreferrer"
                     className="text-gray-500 px-6 py-3 rounded-full text-sm font-bold tracking-wide border border-gray-300 hover:border-gray-900 hover:text-gray-900 transition-all duration-300">
